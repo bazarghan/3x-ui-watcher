@@ -62,10 +62,36 @@ function show_menu() {
 function install_watcher() {
     echo -e "\n${YELLOW}--- Installation ---${NC}"
     
-    read -p "Enter Panel Base URL (e.g. https://example.com/panel): " PANEL_URL
-    read -p "Enter API Token / Session Cookie (leave empty if none): " API_TOKEN
-    read -p "Enter check interval in seconds [default: 30]: " INTERVAL
-    INTERVAL=${INTERVAL:-30}
+    while true; do
+        read -p "Enter Panel Base URL (e.g. https://example.com/panel): " PANEL_URL
+        read -p "Enter API Token / Session Cookie (leave empty if none): " API_TOKEN
+        read -p "Enter check interval in seconds [default: 30]: " INTERVAL
+        INTERVAL=${INTERVAL:-30}
+        
+        # Remove trailing slash
+        PANEL_URL=${PANEL_URL%/}
+        
+        echo -e "${CYAN}[*] Validating connection to panel API...${NC}"
+        
+        # Test API connection
+        HTTP_RESPONSE=$(curl -s -w "%{http_code}" -X GET "${PANEL_URL}/panel/api/clients/list" \
+            -H "Accept: application/json" \
+            -H "Authorization: Bearer ${API_TOKEN}" \
+            -H "Cookie: session=${API_TOKEN}")
+            
+        HTTP_BODY=${HTTP_RESPONSE::-3}
+        HTTP_STATUS=${HTTP_RESPONSE: -3}
+        
+        if [ "$HTTP_STATUS" -eq 200 ] && echo "$HTTP_BODY" | grep -q '"success": *true'; then
+            echo -e "${GREEN}[+] Validation successful! Successfully connected to panel.${NC}\n"
+            break
+        else
+            echo -e "${RED}[!] Validation failed! The panel URL or API token seems incorrect.${NC}"
+            echo -e "${YELLOW}HTTP Status:${NC} ${HTTP_STATUS}"
+            echo -e "${YELLOW}Panel Response:${NC} ${HTTP_BODY}"
+            echo -e "Please check your URL (ensure webBasePath is included if you have one) and your token.\n"
+        fi
+    done
 
     # Install dependencies
     if command -v apt &> /dev/null; then
