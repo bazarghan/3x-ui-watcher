@@ -29,12 +29,13 @@ bash <(curl -Ls https://raw.githubusercontent.com/bazarghan/3x-ui-watcher/main/x
 ```
 
 ### 🛠 Manual Install
-Alternatively, you can clone or download this repository to your server.
-1. Make the script executable and run it as root:
-   ```bash
-   chmod +x xwatcher.sh
-   sudo ./xwatcher.sh
-   ```
+Alternatively, you can manually clone the repository to your server:
+```bash
+git clone https://github.com/bazarghan/3x-ui-watcher.git
+cd 3x-ui-watcher
+chmod +x xwatcher.sh
+sudo ./xwatcher.sh
+```
 
 ### Using the CLI (`xwatcher`)
 The installation script features an interactive menu and will automatically install a global `xwatcher` command.
