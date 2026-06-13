@@ -63,7 +63,7 @@ function install_watcher() {
     echo -e "\n${YELLOW}--- Installation ---${NC}"
     
     while true; do
-        read -p "Enter Panel Base URL (e.g. https://example.com/panel): " PANEL_URL
+        read -p "Enter Panel Base URL (e.g. https://domain.com:54321/webBasePath): " PANEL_URL
         read -p "Enter API Token / Session Cookie (leave empty if none): " API_TOKEN
         read -p "Enter check interval in seconds [default: 30]: " INTERVAL
         INTERVAL=${INTERVAL:-30}
