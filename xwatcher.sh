@@ -7,6 +7,11 @@ YELLOW='\033[0;33m'
 CYAN='\033[0;36m'
 NC='\033[0m' # No Color
 
+# Set your GitHub repository details here for remote installation
+GITHUB_REPO="bazarghan/3x-ui-watcher"
+GITHUB_BRANCH="main"
+GITHUB_RAW_URL="https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}"
+
 INSTALL_DIR="/opt/3xui-watcher"
 SERVICE_NAME="3xui-watcher.service"
 SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}"
@@ -72,18 +77,30 @@ function install_watcher() {
     echo -e "${CYAN}[*] Setting up directory at ${INSTALL_DIR}...${NC}"
     mkdir -p "${INSTALL_DIR}"
 
-    # Ensure monitor.py exists
+    # Ensure monitor.py exists (copy locally or fetch from GitHub)
     if [ -f "monitor.py" ]; then
         cp monitor.py "${INSTALL_DIR}/"
-    elif [ ! -f "${INSTALL_DIR}/monitor.py" ]; then
-        echo -e "${RED}Error: monitor.py not found! Please run this script from the directory containing monitor.py${NC}"
-        sleep 3
+    else
+        echo -e "${CYAN}[*] Downloading monitor.py from GitHub...${NC}"
+        curl -fsSL "${GITHUB_RAW_URL}/monitor.py" -o "${INSTALL_DIR}/monitor.py"
+    fi
+
+    # Verify that monitor.py exists and is not empty
+    if [ ! -s "${INSTALL_DIR}/monitor.py" ]; then
+        echo -e "${RED}Error: Failed to fetch monitor.py. Please configure GITHUB_REPO in xwatcher.sh!${NC}"
+        rm -f "${INSTALL_DIR}/monitor.py"
+        sleep 4
         show_menu
         return
     fi
 
-    # Copy itself to /usr/local/bin so user can just type 'xwatcher'
-    cp "$0" "${BIN_PATH}"
+    # Install the CLI tool to global bin path
+    if [[ -f "$0" && "$(basename "$0")" == "xwatcher.sh" ]]; then
+        cp "$0" "${BIN_PATH}"
+    else
+        echo -e "${CYAN}[*] Downloading xwatcher CLI from GitHub...${NC}"
+        curl -fsSL "${GITHUB_RAW_URL}/xwatcher.sh" -o "${BIN_PATH}"
+    fi
     chmod +x "${BIN_PATH}"
 
     echo -e "${CYAN}[*] Setting up Python virtual environment...${NC}"

@@ -21,10 +21,16 @@ This forces the newly-disabled status to immediately take effect across all inbo
 
 ## 🚀 Installation & Usage
 
-To install the watcher as a background systemd service on your Linux server (Debian/Ubuntu):
+### ⚡ Quick Install (One-liner)
+You can directly install the watcher directly from GitHub by running this command on your server:
 
-1. Clone or download this repository to your server.
-2. Make the script executable and run it as root:
+```bash
+bash <(curl -Ls https://raw.githubusercontent.com/bazarghan/3x-ui-watcher/main/xwatcher.sh)
+```
+
+### 🛠 Manual Install
+Alternatively, you can clone or download this repository to your server.
+1. Make the script executable and run it as root:
    ```bash
    chmod +x xwatcher.sh
    sudo ./xwatcher.sh
