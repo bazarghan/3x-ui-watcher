@@ -24,32 +24,26 @@ This forces the newly-disabled status to immediately take effect across all inbo
 To install the watcher as a background systemd service on your Linux server (Debian/Ubuntu):
 
 1. Clone or download this repository to your server.
-2. Make the installer executable and run it as root:
+2. Make the script executable and run it as root:
    ```bash
-   chmod +x install.sh
-   sudo ./install.sh
+   chmod +x xwatcher.sh
+   sudo ./xwatcher.sh
    ```
-3. The installer will prompt you for three pieces of information:
-   - **Panel Base URL:** The full URL to your panel (e.g. `https://example.com:54321/webBasePath`).
-   - **API Token / Session Cookie:** Your 3x-ui session token (leave blank if not required).
-   - **Check Interval:** How often to check for traffic limits in seconds (default is 30).
 
-### Managing the Service
+### Using the CLI (`xwatcher`)
+The installation script features an interactive menu and will automatically install a global `xwatcher` command.
+At any time, from anywhere on your server, simply type:
 
-Once installed, the service runs automatically in the background and will restart on server reboots. You can manage it using standard `systemctl` commands:
+```bash
+xwatcher
+```
 
-- **Check status / logs in real-time:**
-  ```bash
-  journalctl -u 3xui-watcher -f
-  ```
-- **Stop the watcher:**
-  ```bash
-  sudo systemctl stop 3xui-watcher
-  ```
-- **Start the watcher:**
-  ```bash
-  sudo systemctl start 3xui-watcher
-  ```
+This will bring up the interactive color menu where you can:
+- Install / Reinstall the watcher
+- Enable & Start the service
+- Disable & Stop the service
+- View real-time logs
+- Completely uninstall the watcher (removes all files and services)
 
 ## 🛠 Prerequisites
 - A Linux server running systemd (Ubuntu, Debian, CentOS, etc.)
